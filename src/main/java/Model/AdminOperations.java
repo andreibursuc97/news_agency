@@ -15,10 +15,9 @@ public class AdminOperations {
     EntityManagerFactory entityManagerFactory;
     ClientHandler clientHandler;
 
-    public void insert(AdminEntity adminEntity)
-    {
-        entityManagerFactory=Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
-        entityManager=entityManagerFactory.createEntityManager();
+    public void insert(AdminEntity adminEntity) {
+        entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
+        entityManager = entityManagerFactory.createEntityManager();
 
         entityManager.getTransaction().begin();
         entityManager.persist(adminEntity);
@@ -27,8 +26,7 @@ public class AdminOperations {
         //HibernateUtil.shutdown();
     }
 
-    public void logare(AdminEntity adminEntity,ClientHandler clientHandler)
-    {
+    public void logare(AdminEntity adminEntity, ClientHandler clientHandler) {
         try {
             Encrypt code = new Encrypt();
 
@@ -37,37 +35,52 @@ public class AdminOperations {
             Query query = entityManager.createNamedQuery("Admin.findById");
 
             query.setParameter("username", adminEntity.getUsername());
-            List<AdminEntity> adminEntityList=query.getResultList();
-            if(adminEntityList.isEmpty())
-            {
+            List<AdminEntity> adminEntityList = query.getResultList();
+            if (adminEntityList.isEmpty()) {
                 clientHandler.sendCommand("UsernameGresit");
                 return;
             }
-            AdminEntity admin=(AdminEntity) query.getSingleResult();
+            AdminEntity admin = (AdminEntity) query.getSingleResult();
             //admin=entityManager.find(AdminEntity);
-            if (admin == null)
-            {
+            if (admin == null) {
                 clientHandler.sendCommand("UsernameGresit");
                 return;
             }
             System.out.println(code.codeToString(admin.getParola()));
             System.out.println(code.codeToString(adminEntity.getParola()));
-            if(!code.codeToString(admin.getParola()).equals(code.codeToString(adminEntity.getParola())))
-            {
+            if (!code.codeToString(admin.getParola()).equals(code.codeToString(adminEntity.getParola()))) {
                 clientHandler.sendCommand("ParolaGresita");
                 return;
             }
+            Byte byte1=1;
+            if (admin.getLogat() == byte1) {
+                clientHandler.sendCommand("DejaLogat");
+                return;
+            }
+            admin.setLogat(byte1);
+            entityManager.getTransaction().begin();
+            entityManager.merge(admin);
+            entityManager.getTransaction().commit();
+            clientHandler.sendCommand("LogareReusita");
 
-
-        }
-        catch (IllegalArgumentException e)
-        {
-            JOptionPane.showMessageDialog(null,e.getMessage());
-        }
-        finally {
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        } finally {
             entityManagerFactory.close();
         }
         //  Query query = entityManager.createQuery("SELECT id FROM AdminEntity id where username= :?);
 
     }
+
+    public void insertJurnalist(JurnalistEntity jurnalistEntity) {
+        entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
+        entityManager = entityManagerFactory.createEntityManager();
+
+        entityManager.getTransaction().begin();
+        entityManager.persist(jurnalistEntity);
+        entityManager.getTransaction().commit();
+        entityManagerFactory.close();
+    }
+
+
 }
