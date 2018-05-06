@@ -72,6 +72,22 @@ public class AdminOperations {
 
     }
 
+    public void delogare(AdminEntity adminEntity)
+    {
+        entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
+        entityManager = entityManagerFactory.createEntityManager();
+        entityManager = entityManagerFactory.createEntityManager();
+        Query query = entityManager.createNamedQuery("Admin.findById");
+        query.setParameter("username", adminEntity.getUsername());
+        AdminEntity admin = (AdminEntity) query.getSingleResult();
+        Byte byte1=0;
+        admin.setLogat(byte1);
+        entityManager.getTransaction().begin();
+        entityManager.merge(admin);
+        entityManager.getTransaction().commit();
+        entityManagerFactory.close();
+    }
+
     public void insertJurnalist(JurnalistEntity jurnalistEntity) {
         entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
         entityManager = entityManagerFactory.createEntityManager();

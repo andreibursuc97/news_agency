@@ -4,12 +4,13 @@ import javax.persistence.*;
 import java.util.Arrays;
 
 @Entity
-@Table(name = "admin", schema = "agentie_presa")
+@Table(name = "admin", schema = "agentie_presa", catalog = "")
 @NamedQuery(name="Admin.findById", query = "FROM AdminEntity A where A.username = :username")
 public class AdminEntity {
     private int id;
     private String username;
     private byte[] parola;
+    private Byte logat;
 
     @Id
     @Column(name = "id")
@@ -61,5 +62,15 @@ public class AdminEntity {
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(parola);
         return result;
+    }
+
+    @Basic
+    @Column(name = "logat")
+    public Byte getLogat() {
+        return logat;
+    }
+
+    public void setLogat(Byte logat) {
+        this.logat = logat;
     }
 }

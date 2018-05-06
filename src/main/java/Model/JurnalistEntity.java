@@ -10,6 +10,7 @@ public class JurnalistEntity {
     private String username;
     private String nume;
     private byte[] parola;
+    private Byte logat;
 
     @Id
     @Column(name = "id")
@@ -73,5 +74,15 @@ public class JurnalistEntity {
         result = 31 * result + (nume != null ? nume.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(parola);
         return result;
+    }
+
+    @Basic
+    @Column(name = "logat")
+    public Byte getLogat() {
+        return logat;
+    }
+
+    public void setLogat(Byte logat) {
+        this.logat = logat;
     }
 }

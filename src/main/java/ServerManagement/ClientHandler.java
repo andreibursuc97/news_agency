@@ -101,6 +101,9 @@ public class ClientHandler extends Thread
                         System.out.println(adminEntity.getUsername());
                         dos.writeUTF("Succes Logare!");
                         break;
+                    case "Delogare":
+                        adminEntity=gson.fromJson(vectReceived[1],AdminEntity.class);
+                        adminOperations.delogare(adminEntity);
                     default:
                         dos.writeUTF("Invalid input!");
                 }
