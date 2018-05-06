@@ -2,6 +2,8 @@ package ServerManagement;
 
 import Model.AdminEntity;
 import Model.AdminOperations;
+import Model.JurnalistEntity;
+import Model.JurnalistOperations;
 import com.google.gson.Gson;
 
 import java.io.DataInputStream;
@@ -47,7 +49,9 @@ public class ClientHandler extends Thread
         String received;
         String toreturn;
         AdminEntity adminEntity;
+        JurnalistEntity jurnalistEntity;
         AdminOperations adminOperations=new AdminOperations();
+        JurnalistOperations jurnalistOperations= new JurnalistOperations();
         Gson gson = new Gson();
         while (true)
         {
@@ -104,6 +108,20 @@ public class ClientHandler extends Thread
                     case "Delogare":
                         adminEntity=gson.fromJson(vectReceived[1],AdminEntity.class);
                         adminOperations.delogare(adminEntity);
+                        break;
+                    case "adaugaJurnalist":
+                        jurnalistEntity=gson.fromJson(vectReceived[1],JurnalistEntity.class);
+                        adminOperations.adaugaJurnalist(jurnalistEntity,this);
+                        break;
+                    case "DelogareJurnalist":
+                        jurnalistEntity=gson.fromJson(vectReceived[1],JurnalistEntity.class);
+                        jurnalistOperations.delogare(jurnalistEntity);
+                        break;
+                    case "Logare jurnalist":
+                        jurnalistEntity=gson.fromJson(vectReceived[1],JurnalistEntity.class);
+                        jurnalistOperations.logare(jurnalistEntity,this);
+                        //System.out.println(adminEntity.getUsername());
+                        break;
                     default:
                         dos.writeUTF("Invalid input!");
                 }

@@ -13,7 +13,7 @@ public class AdminOperations {
 
     EntityManager entityManager;
     EntityManagerFactory entityManagerFactory;
-    ClientHandler clientHandler;
+    //ClientHandler clientHandler;
 
     public void insert(AdminEntity adminEntity) {
         entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
@@ -88,13 +88,23 @@ public class AdminOperations {
         entityManagerFactory.close();
     }
 
-    public void insertJurnalist(JurnalistEntity jurnalistEntity) {
+    public void adaugaJurnalist(JurnalistEntity jurnalistEntity,ClientHandler clientHandler) {
         entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
         entityManager = entityManagerFactory.createEntityManager();
 
+        Query query = entityManager.createNamedQuery("Jurnalist.findById");
+
+        query.setParameter("username", jurnalistEntity.getUsername());
+
+        List<AdminEntity> adminEntityList = query.getResultList();
+        if (!adminEntityList.isEmpty()) {
+            clientHandler.sendCommand("ExistaDejaJurnalist");
+            return;
+        }
         entityManager.getTransaction().begin();
         entityManager.persist(jurnalistEntity);
         entityManager.getTransaction().commit();
+        clientHandler.sendCommand("jurnalistAdaugat");
         entityManagerFactory.close();
     }
 

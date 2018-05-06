@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 @Entity
 @Table(name = "jurnalist", schema = "agentie_presa", catalog = "")
+@NamedQuery(name="Jurnalist.findById", query = "FROM JurnalistEntity J where J.username = :username")
 public class JurnalistEntity {
     private int id;
     private String username;
