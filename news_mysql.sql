@@ -9,7 +9,8 @@ use agentie_presa;
 CREATE TABLE IF NOT EXISTS Admin
 (id int unique auto_increment primary key,
 username char(20),
-parola BINARY(64)
+parola BINARY(64),
+logat tinyint(1)
 );
 
 
@@ -17,7 +18,8 @@ CREATE TABLE IF NOT EXISTS Jurnalist
 (id int unique auto_increment primary key,
 username char(20),
 nume char(20),
-parola BINARY(32)
+parola BINARY(32),
+logat tinyint(1)
 );
 
 CREATE TABLE IF NOT EXISTS Articol
@@ -25,7 +27,7 @@ CREATE TABLE IF NOT EXISTS Articol
 titlu char(40),
 abstract char(144),
 autor char(40),
-continut char(700),
+continut text(700),
 nr_bilete_vandute int
 );
 
