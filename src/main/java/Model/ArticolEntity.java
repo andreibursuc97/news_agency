@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "articol", schema = "agentie_presa", catalog = "")
+@NamedQuery(name="ArticolEntity.afiseazaArticole",query = "FROM ArticolEntity ")
 public class ArticolEntity {
     private int id;
     private String titlu;

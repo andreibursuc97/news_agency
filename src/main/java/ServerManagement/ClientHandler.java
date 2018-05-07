@@ -1,26 +1,21 @@
 package ServerManagement;
 
-import Model.AdminEntity;
-import Model.AdminOperations;
-import Model.JurnalistEntity;
-import Model.JurnalistOperations;
+import Model.*;
 import com.google.gson.Gson;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 
 public class ClientHandler extends Thread
 {
-    DateFormat fordate = new SimpleDateFormat("yyyy/MM/dd");
-    DateFormat fortime = new SimpleDateFormat("hh:mm:ss");
+
     final DataInputStream dis;
     final DataOutputStream dos;
     final Socket s;
+    ArrayList<ArticolEntity> articolEntities;
 
 
     // Constructor
@@ -29,6 +24,10 @@ public class ClientHandler extends Thread
         this.s = s;
         this.dis = dis;
         this.dos = dos;
+    }
+
+    public void setArticolEntities(ArrayList<ArticolEntity> articolEntities) {
+        this.articolEntities = articolEntities;
     }
 
     public void sendCommand(String command)
@@ -52,6 +51,8 @@ public class ClientHandler extends Thread
         JurnalistEntity jurnalistEntity;
         AdminOperations adminOperations=new AdminOperations();
         JurnalistOperations jurnalistOperations= new JurnalistOperations();
+        ArticolEntity articolEntity;
+        ArticolOperations articolOperations=new ArticolOperations(this);
         Gson gson = new Gson();
         while (true)
         {
@@ -77,21 +78,12 @@ public class ClientHandler extends Thread
                 }
                 //System.out.println(received);
                 // creating Date object
-                Date date = new Date();
+
 
                 // write on output stream based on the
                 // answer from the client
                 switch (received) {
 
-                    case "Date" :
-                        toreturn = fordate.format(date);
-                        dos.writeUTF(toreturn);
-                        break;
-
-                    case "Time" :
-                        toreturn = fortime.format(date);
-                        dos.writeUTF(toreturn);
-                        break;
                     case "AdminInsert" :
                         //JurnalistEntity jurnalistEntity=gson.fromJson(vectReceived[1],JurnalistEntity.class);
                         adminEntity=gson.fromJson(vectReceived[1],AdminEntity.class);
@@ -121,6 +113,16 @@ public class ClientHandler extends Thread
                         jurnalistEntity=gson.fromJson(vectReceived[1],JurnalistEntity.class);
                         jurnalistOperations.logare(jurnalistEntity,this);
                         //System.out.println(adminEntity.getUsername());
+                        break;
+                    case "Inserare articol":
+                        articolEntity=gson.fromJson(vectReceived[1],ArticolEntity.class);
+                        articolOperations.insert(articolEntity);
+                        dos.writeUTF("Succes inserare articol");
+                        break;
+                    case "Afiseaza articole":
+                        articolOperations.arataArticole();
+                        dos.writeUTF("articole"+"\n"+gson.toJson(articolEntities));
+                        //dos.writeUTF("Succes inserare articol");
                         break;
                     default:
                         dos.writeUTF("Invalid input!");
