@@ -4,7 +4,12 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "articol", schema = "agentie_presa", catalog = "")
-@NamedQuery(name="ArticolEntity.afiseazaArticole",query = "FROM ArticolEntity ")
+@NamedQueries({
+        @NamedQuery(name="ArticolEntity.afiseazaArticole",query = "FROM ArticolEntity "),
+        @NamedQuery(name="ArticolEntity.getId",query = "select art.id FROM ArticolEntity as art where art.titlu=:titlu "),
+        @NamedQuery(name="ArticolEntity.getMaxId",query = "select max(art.id) FROM ArticolEntity as art")
+})
+
 public class ArticolEntity {
     private int id;
     private String titlu;

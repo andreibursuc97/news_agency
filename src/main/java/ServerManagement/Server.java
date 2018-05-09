@@ -13,7 +13,7 @@ public class Server {
         // server is listening on port 5056
         ServerSocket ss = null;
         try {
-            ss = new ServerSocket(8080);
+            ss = new ServerSocket(8081);
         } catch (IOException e) {
             e.printStackTrace();
         }

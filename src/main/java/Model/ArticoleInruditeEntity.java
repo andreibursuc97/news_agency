@@ -4,10 +4,17 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "articole_inrudite", schema = "agentie_presa", catalog = "")
+@NamedQuery(name="ArticoleInruditeEntity.getMaxId",query = "select max(art.id) FROM ArticoleInruditeEntity as art")
 public class ArticoleInruditeEntity {
     private int id;
     private Integer idArticol1;
     private Integer idArticol2;
+
+    public ArticoleInruditeEntity(int id,Integer idArticol1, Integer idArticol2) {
+        this.id=id;
+        this.idArticol1 = idArticol1;
+        this.idArticol2 = idArticol2;
+    }
 
     @Id
     @Column(name = "id")

@@ -8,6 +8,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ClientHandler extends Thread
 {
@@ -16,6 +18,7 @@ public class ClientHandler extends Thread
     final DataOutputStream dos;
     final Socket s;
     ArrayList<ArticolEntity> articolEntities;
+    List<ArticolEntity> titluArticolEntities;
 
 
     // Constructor
@@ -28,6 +31,10 @@ public class ClientHandler extends Thread
 
     public void setArticolEntities(ArrayList<ArticolEntity> articolEntities) {
         this.articolEntities = articolEntities;
+    }
+
+    public List<ArticolEntity> getTitluArticolEntities() {
+        return titluArticolEntities;
     }
 
     public void sendCommand(String command)
@@ -51,6 +58,7 @@ public class ClientHandler extends Thread
         JurnalistEntity jurnalistEntity;
         AdminOperations adminOperations=new AdminOperations();
         JurnalistOperations jurnalistOperations= new JurnalistOperations();
+        ArticoleInruditeEntityOperations articoleInruditeEntityOperations=new ArticoleInruditeEntityOperations();
         ArticolEntity articolEntity;
         ArticolOperations articolOperations=new ArticolOperations(this);
         Gson gson = new Gson();
@@ -63,7 +71,7 @@ public class ClientHandler extends Thread
 
                 // receive the answer from client
                 received = dis.readUTF();
-
+                System.out.println(received);
                 String[] vectReceived=received.split("\n");
                 received=vectReceived[0];
                 //System.out.println(received+" "+vectReceived[1]);
@@ -116,7 +124,14 @@ public class ClientHandler extends Thread
                         break;
                     case "Inserare articol":
                         articolEntity=gson.fromJson(vectReceived[1],ArticolEntity.class);
+
+                        titluArticolEntities=stringToArray(vectReceived[2],ArticolEntity[].class);
                         articolOperations.insert(articolEntity);
+                        articoleInruditeEntityOperations.insert(titluArticolEntities);
+                        /*for(ArticolEntity s:stringToArray(vectReceived[2],ArticolEntity[].class))
+                        {
+                            System.out.println(s.getTitlu());
+                        }*/
                         dos.writeUTF("Succes inserare articol");
                         break;
                     case "Afiseaza articole":
@@ -141,6 +156,11 @@ public class ClientHandler extends Thread
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    public static <T> List<T> stringToArray(String s, Class<T[]> clazz) {
+        T[] arr = new Gson().fromJson(s, clazz);
+        return Arrays.asList(arr); //or return Arrays.asList(new Gson().fromJson(s, clazz)); for a one-liner
     }
 }
 
