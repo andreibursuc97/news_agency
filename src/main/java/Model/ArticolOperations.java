@@ -30,6 +30,18 @@ public class ArticolOperations {
         //HibernateUtil.shutdown();
     }
 
+    public void update(ArticolEntity articolEntity) {
+        entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
+        entityManager = entityManagerFactory.createEntityManager();
+
+        entityManager.getTransaction().begin();
+        entityManager.merge(articolEntity);
+        //entityManager.persist(articolEntity);
+        entityManager.getTransaction().commit();
+        entityManagerFactory.close();
+        //HibernateUtil.shutdown();
+    }
+
     public void arataArticole()
     {
         entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");

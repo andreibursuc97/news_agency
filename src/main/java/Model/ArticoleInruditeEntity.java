@@ -3,8 +3,11 @@ package Model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "articole_inrudite", schema = "agentie_presa", catalog = "")
-@NamedQuery(name="ArticoleInruditeEntity.getMaxId",query = "select max(art.id) FROM ArticoleInruditeEntity as art")
+@Table(name = "articole_inrudite", schema = "agentie_presa")
+@NamedQueries({
+    @NamedQuery(name="ArticoleInruditeEntity.getMaxId",query = "select max(art.id) FROM ArticoleInruditeEntity as art"),
+    @NamedQuery(name="ArticoleInruditeEntity.getArticoleInrudite",query = " FROM ArticolEntity as art where art.id in (select artInrudite.idArticol2 from ArticoleInruditeEntity as artInrudite where artInrudite.idArticol1=:id)")
+})
 public class ArticoleInruditeEntity {
     private int id;
     private Integer idArticol1;
@@ -14,6 +17,9 @@ public class ArticoleInruditeEntity {
         this.id=id;
         this.idArticol1 = idArticol1;
         this.idArticol2 = idArticol2;
+    }
+
+    public ArticoleInruditeEntity() {
     }
 
     @Id

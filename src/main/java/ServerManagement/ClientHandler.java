@@ -19,6 +19,7 @@ public class ClientHandler extends Thread
     final Socket s;
     ArrayList<ArticolEntity> articolEntities;
     List<ArticolEntity> titluArticolEntities;
+    List<ArticolEntity> articoleInrudite;
 
 
     // Constructor
@@ -35,6 +36,10 @@ public class ClientHandler extends Thread
 
     public List<ArticolEntity> getTitluArticolEntities() {
         return titluArticolEntities;
+    }
+
+    public void setArticoleInrudite(List<ArticolEntity> articoleInrudite) {
+        this.articoleInrudite = articoleInrudite;
     }
 
     public void sendCommand(String command)
@@ -58,7 +63,7 @@ public class ClientHandler extends Thread
         JurnalistEntity jurnalistEntity;
         AdminOperations adminOperations=new AdminOperations();
         JurnalistOperations jurnalistOperations= new JurnalistOperations();
-        ArticoleInruditeEntityOperations articoleInruditeEntityOperations=new ArticoleInruditeEntityOperations();
+        ArticoleInruditeEntityOperations articoleInruditeEntityOperations=new ArticoleInruditeEntityOperations(this);
         ArticolEntity articolEntity;
         ArticolOperations articolOperations=new ArticolOperations(this);
         Gson gson = new Gson();
@@ -138,6 +143,17 @@ public class ClientHandler extends Thread
                         articolOperations.arataArticole();
                         dos.writeUTF("articole"+"\n"+gson.toJson(articolEntities));
                         //dos.writeUTF("Succes inserare articol");
+                        break;
+                    case "Afiseaza articole inrudite":
+                        articolEntity=gson.fromJson(vectReceived[1],ArticolEntity.class);
+                        articoleInruditeEntityOperations.arataArticoleInrudite(articolEntity);
+                        dos.writeUTF("articoleInrudite"+"\n"+gson.toJson(articoleInrudite));
+                        //dos.writeUTF("Succes inserare articol");
+                        break;
+                    case "Update articol":
+                        articolEntity=gson.fromJson(vectReceived[1],ArticolEntity.class);
+                        articolOperations.update(articolEntity);
+                        dos.writeUTF("Succes actualizare articol");
                         break;
                     default:
                         dos.writeUTF("Invalid input!");

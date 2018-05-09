@@ -14,6 +14,10 @@ public class ArticoleInruditeEntityOperations {
     EntityManagerFactory entityManagerFactory;
     ClientHandler clientHandler;
 
+    public ArticoleInruditeEntityOperations(ClientHandler clientHandler) {
+        this.clientHandler = clientHandler;
+    }
+
     public void insert(List<ArticolEntity> articolEntities) {
         entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
         entityManager = entityManagerFactory.createEntityManager();
@@ -53,6 +57,19 @@ public class ArticoleInruditeEntityOperations {
 
         entityManagerFactory.close();
         //HibernateUtil.shutdown();
+    }
+
+    public void arataArticoleInrudite(ArticolEntity articolEntity)
+    {
+        entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.tutorial.jpa");
+        entityManager = entityManagerFactory.createEntityManager();
+        Query query=entityManager.createNamedQuery("ArticoleInruditeEntity.getArticoleInrudite");
+        query.setParameter("id",articolEntity.getId());
+        List<ArticolEntity> articolEntities=query.getResultList();
+        entityManagerFactory.close();
+        clientHandler.setArticoleInrudite(articolEntities);
+
+
     }
 
 }
