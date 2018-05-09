@@ -26,7 +26,10 @@ public class ArticoleInruditeEntityOperations {
         int id1=(Integer) query.getSingleResult();
 
         query=entityManager.createNamedQuery("ArticoleInruditeEntity.getMaxId");
-        int idManage=(Integer) query.getSingleResult();
+        int idManage;
+        if(query.getSingleResult()!=null)
+        {idManage=(Integer) query.getSingleResult();}
+        else{idManage=0;}
         ArticoleInruditeEntity articoleInruditeEntity;
         ArticoleInruditeEntity articoleInruditeEntity2;
         for(ArticolEntity art:articolEntities)

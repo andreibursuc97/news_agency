@@ -25,10 +25,9 @@ logat tinyint(1)
 CREATE TABLE IF NOT EXISTS Articol
 (id int unique auto_increment primary key,
 titlu char(40),
-abstract char(144),
+abstract_articol char(144),
 autor char(40),
-continut text(700),
-nr_bilete_vandute int
+continut text(3000)
 );
 
 CREATE TABLE IF NOT EXISTS articole_inrudite
@@ -39,3 +38,5 @@ index(id_articol1),
 index(id_articol2),
 foreign key (id_articol1) references Articol(id),
 foreign key (id_articol2) references Articol(id));
+
+ALTER TABLE articol MODIFY continut text(3000);
